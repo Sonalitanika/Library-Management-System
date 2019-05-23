@@ -1,0 +1,94 @@
+﻿@model IEnumerable<LibrarySystem.Models.Books>
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @if (User.IsInRole("Librarian"))
+    {
+        <a asp-action="Create">Create New</a>
+    }
+</p>
+
+<div class="class=" form-group"">
+    <form asp-controller="Books" asp-action="Index">
+        <p>
+            By: <select name="searchType" asp-items="Html.GetEnumSelectList<SearchType>()">
+                <option selected="selected" value="">--Please Select --</option>
+            </select>
+            <input type="text" name="searchString" />
+            <input class="btn" type="submit" value="Filter" />
+        </p>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Copies)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (item.Copies == 0)
+            {
+                <tr style="background-color:maroon;">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Copies)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Copies)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                    <td>
+                        <a asp-action="AddtoCart" asp-route-bookid="@item.ID">Add</a>
+                    </td>  
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>

@@ -1,0 +1,29 @@
+using System;
+using LibrarySystem.Areas.Identity.Data;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+[assembly: HostingStartup(typeof(LibrarySystem.Areas.Identity.IdentityHostingStartup))]
+namespace LibrarySystem.Areas.Identity
+{
+    public class IdentityHostingStartup : IHostingStartup
+    {
+        public void Configure(IWebHostBuilder builder)
+        {
+            builder.ConfigureServices((context, services) =>
+            {
+                services.AddDbContext<LibrarySystemIdentityDbContext>(options =>
+                    options.UseSqlServer(
+                        context.Configuration.GetConnectionString("LibrarySystemIdentityDbContextConnection")));
+
+                services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<LibrarySystemIdentityDbContext>();
+            });
+        }
+    }
+}
